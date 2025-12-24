@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: centralize-sonar
+server:
+  port: 8181
+
+
+sonar:
+  url: "http://localhost:9001"
+  token: "YOUR_SONARQ"
+  username: "admin"
+  password: "1234"
