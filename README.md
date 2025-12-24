@@ -63,6 +63,18 @@ sonar:
     ```bash
     curl http://localhost:8080/your-endpoint
     ```
+## API Documentation (OpenAPI/Swagger)
+This project exposes OpenAPI documentation and an interactive Swagger UI.
+- Swagger UI:
+    - [http://localhost:8181/swagger-ui.html](http://localhost:8181/swagger-ui.html)
+    - [http://localhost:8181/swagger-ui/index.html](http://localhost:8181/swagger-ui/index.html)
+
+- OpenAPI JSON:
+    - [http://localhost:8181/v3/api-docs](http://localhost:8181/v3/api-docs)
+
+- OpenAPI YAML:
+    - [http://localhost:8181/v3/api-docs.yaml](http://localhost:8181/v3/api-docs.yaml)
+
 
 ## SonarQube Notes
 - Default SonarQube URL: [http://localhost:9000](http://localhost:9000)
