@@ -34,9 +34,6 @@ public class SonarClient {
 
         HttpEntity<Void> entity = new HttpEntity<>(createHeaders());
 
-        ResponseEntity<String> response =
-                restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
         ResponseEntity<QualityGateClientResponse> qualityGateResponseResponse =
                 restTemplate.exchange(
                         url,
@@ -55,9 +52,6 @@ public class SonarClient {
         String url = sonarConfiguration.getUrl() + "/api/measures/component?component=" + projectKey + "&metricKeys=" + metricKeys;
 
         HttpEntity<Void> entity = new HttpEntity<>(createHeaders());
-
-//        ResponseEntity<String> response =
-//                restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
         ResponseEntity<MetricsClientResponse> metricsResponseResponse = restTemplate.exchange(
                 url,
