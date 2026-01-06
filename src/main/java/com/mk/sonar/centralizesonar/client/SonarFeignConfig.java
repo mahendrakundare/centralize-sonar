@@ -2,6 +2,7 @@ package com.mk.sonar.centralizesonar.client;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import feign.codec.ErrorDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +13,7 @@ import java.util.Base64;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Configuration
-public class FeignConfig {
+public class SonarFeignConfig {
 
     @Bean
     public RequestInterceptor sonarRequestInterceptor(SonarConfiguration sonarConfiguration) {
@@ -30,6 +31,11 @@ public class FeignConfig {
                 template.header(HttpHeaders.ACCEPT, "application/json");
             }
         };
+    }
+
+    @Bean
+    public ErrorDecoder errorDecoder() {
+        return new SonarErrorDecoder();
     }
 }
 

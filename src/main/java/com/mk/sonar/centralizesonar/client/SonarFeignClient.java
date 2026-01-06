@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
         name = "sonarClient",
-        url = "${sonar.url}"
+        url = "${sonar.url}",
+        configuration = SonarFeignConfig.class
 )
 public interface SonarFeignClient {
 

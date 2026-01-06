@@ -1,5 +1,6 @@
 package com.mk.sonar.centralizesonar.controller;
 
+import com.mk.sonar.centralizesonar.controller.response.ErrorResponse;
 import com.mk.sonar.centralizesonar.controller.response.MetricsApiResponse;
 import com.mk.sonar.centralizesonar.controller.response.QualityGateApiResponse;
 import com.mk.sonar.centralizesonar.service.SonarMetricsService;
@@ -36,8 +37,30 @@ public class SonarMetricController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = QualityGateApiResponse.class))
             ),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content(mediaType = "application/json"))
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad request - invalid project key",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication failed",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Project not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            )
     })
 
     @GetMapping("/quality-gate")
@@ -58,8 +81,30 @@ public class SonarMetricController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = MetricsApiResponse.class))
             ),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content(mediaType = "application/json"))
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad request - invalid project key",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication failed",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Project not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            )
     })
 
     @GetMapping("/metrics")
