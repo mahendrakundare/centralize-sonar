@@ -1,0 +1,24 @@
+package com.mk.sonar.centralizesonar.client;
+
+import com.mk.sonar.centralizesonar.client.response.MetricsClientResponse;
+import com.mk.sonar.centralizesonar.client.response.QualityGateClientResponse;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@FeignClient(
+        name = "sonarClient",
+        url = "${sonar.url}"
+)
+public interface SonarFeignClient {
+
+    @GetMapping("/api/qualitygates/project_status")
+    QualityGateClientResponse getQualityGateStatus(@RequestParam("projectKey") String projectKey);
+
+    @GetMapping("/api/measures/component")
+    MetricsClientResponse getMetrics(
+            @RequestParam("component") String component,
+            @RequestParam("metricKeys") String metricKeys
+    );
+}
+
