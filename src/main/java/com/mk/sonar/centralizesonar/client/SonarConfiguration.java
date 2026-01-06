@@ -8,12 +8,14 @@ public class SonarConfiguration {
     private final String token;
     private final String username;
     private final String password;
+    private final String metricKeys;
 
-    public SonarConfiguration(String url, String token, String username, String password) {
+    public SonarConfiguration(String url, String token, String username, String password, String metricKeys) {
         this.url = url;
         this.token = token;
         this.username = username;
         this.password = password;
+        this.metricKeys = metricKeys;
     }
 
     public String getUrl() {
@@ -30,5 +32,9 @@ public class SonarConfiguration {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getMetricKeys() {
+        return metricKeys;
     }
 }

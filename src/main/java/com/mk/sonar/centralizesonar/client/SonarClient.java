@@ -45,7 +45,7 @@ public class SonarClient {
     }
 
     public MetricsClientResponse getMetrics(String projectKey) {
-        String metricKeys = "bugs,vulnerabilities,code_smells,coverage,duplicated_lines_density,security_hotspots,security_rating,reliability_rating";
+        String metricKeys = sonarConfiguration.getMetricKeys();
 
         String url = sonarConfiguration.getUrl() + "/api/measures/component?component=" + projectKey + "&metricKeys=" + metricKeys;
 

@@ -10,3 +10,4 @@ sonar:
   token: "YOUR_SONARQ"
   username: "admin"
   password: "1234"
+  metricKeys: "bugs,vulnerabilities,code_smells,coverage,duplicated_lines_density,security_hotspots,security_rating,reliability_rating"
