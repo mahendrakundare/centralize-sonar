@@ -4,10 +4,21 @@ spring:
 server:
   port: 8181
 
-
 sonar:
-  url: "http://localhost:9000"
-  token: "YOUR_SONARQ"
-  username: "admin"
-  password: "1234"
-  metricKeys: "bugs,vulnerabilities,code_smells,coverage,duplicated_lines_density,security_hotspots,security_rating,reliability_rating"
+  url: "${SONAR_URL:http://localhost:9000}"
+  token: "${SONAR_TOKEN:}"
+  username: "${SONAR_USERNAME:admin}"
+  password: "${SONAR_PASSWORD:}"
+  metricKeys: "${SONAR_METRIC_KEYS:bugs,vulnerabilities,code_smells,coverage,duplicated_lines_density,security_hotspots,security_rating,reliability_rating}"
+
+feign:
+  client:
+    config:
+      sonarClient:
+        connectTimeout: 5000
+        readTimeout: 10000
+        loggerLevel: basic
+  httpclient:
+    enabled: true
+    max-connections: 200
+    max-connections-per-route: 50

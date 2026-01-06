@@ -10,6 +10,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/sonar")
+@Validated
 public class SonarMetricController {
 
     private final SonarMetricsService sonarMetricsService;
@@ -66,7 +70,10 @@ public class SonarMetricController {
     @GetMapping("/quality-gate")
     public QualityGateApiResponse fetchQualityGate(
             @Parameter(description = "SonarQube project key", required = true)
-            @RequestParam String projectKey) {
+            @RequestParam
+            @NotBlank(message = "Project key cannot be blank")
+            @Size(min = 1, max = 400, message = "Project key must be between 1 and 400 characters")
+            String projectKey) {
         return sonarMetricsService.fetchQualityGate(projectKey);
     }
 
@@ -110,7 +117,10 @@ public class SonarMetricController {
     @GetMapping("/metrics")
     public MetricsApiResponse fetchMetrics(
             @Parameter(description = "SonarQube project key", required = true)
-            @RequestParam String projectKey) {
+            @RequestParam
+            @NotBlank(message = "Project key cannot be blank")
+            @Size(min = 1, max = 400, message = "Project key must be between 1 and 400 characters")
+            String projectKey) {
         return sonarMetricsService.fetchMetrics(projectKey);
     }
 

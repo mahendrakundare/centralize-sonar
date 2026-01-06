@@ -2,10 +2,12 @@ package com.mk.sonar.centralizesonar.exception;
 
 import com.mk.sonar.centralizesonar.controller.response.ErrorResponse;
 import feign.FeignException;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -76,6 +78,40 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(
                 ex.getMessage(),
                 "INVALID_ARGUMENT",
+                400,
+                request.getDescription(false).replace("uri=", "")
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(
+            ConstraintViolationException ex, WebRequest request) {
+        logger.warn("Validation error: {}", ex.getMessage());
+        StringBuilder message = new StringBuilder("Validation failed: ");
+        ex.getConstraintViolations().forEach(violation ->
+                message.append(violation.getPropertyPath()).append(": ").append(violation.getMessage()).append("; ")
+        );
+        ErrorResponse error = new ErrorResponse(
+                message.toString().trim(),
+                "VALIDATION_ERROR",
+                400,
+                request.getDescription(false).replace("uri=", "")
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException ex, WebRequest request) {
+        logger.warn("Method argument validation error: {}", ex.getMessage());
+        StringBuilder message = new StringBuilder("Validation failed: ");
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                message.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("; ")
+        );
+        ErrorResponse error = new ErrorResponse(
+                message.toString().trim(),
+                "VALIDATION_ERROR",
                 400,
                 request.getDescription(false).replace("uri=", "")
         );
