@@ -20,13 +20,13 @@ public class SonarMetricsService {
     }
 
     private QualityGateApiResponse mapToQualityGateApiResponse(QualityGateClientResponse qualityGateStatus) {
-        return new QualityGateApiResponse(new ProjectStatusResponse(qualityGateStatus.getProjectStatus().getStatus(),
-                qualityGateStatus.getProjectStatus().getConditions()
+        return new QualityGateApiResponse(new ProjectStatusResponse(qualityGateStatus.projectStatus().status(),
+                qualityGateStatus.projectStatus().conditions()
                         .stream().map(condition -> new com.mk.sonar.centralizesonar.controller.response.ConditionResult(
-                                condition.getMetricKey(),
-                                condition.getStatus(),
-                                condition.getActualValue(),
-                                condition.getErrorThreshold()
+                                condition.metricKey(),
+                                condition.status(),
+                                condition.actualValue(),
+                                condition.errorThreshold()
                         )).toList()));
     }
 
@@ -37,9 +37,9 @@ public class SonarMetricsService {
 
     private MetricsApiResponse mapToMetricsApiResponse(MetricsClientResponse metrics) {
         return new MetricsApiResponse(new ComponentResponse(
-                metrics.getComponent().getMeasures()
+                metrics.component().measures()
                         .stream()
-                        .map(measure -> new MeasureResponse(measure.getMetric(), measure.getValue())).toList())
+                        .map(measure -> new MeasureResponse(measure.metric(), measure.value())).toList())
         );
     }
 

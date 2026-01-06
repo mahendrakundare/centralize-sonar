@@ -23,13 +23,13 @@ public class SonarClient {
 
     private HttpHeaders createHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(sonarConfiguration.getUsername(), sonarConfiguration.getPassword());
+        headers.setBasicAuth(sonarConfiguration.username(), sonarConfiguration.password());
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         return headers;
     }
 
     public QualityGateClientResponse getQualityGateStatus(String projectKey) {
-        String url = sonarConfiguration.getUrl() + "/api/qualitygates/project_status?projectKey=" + projectKey;
+        String url = sonarConfiguration.url() + "/api/qualitygates/project_status?projectKey=" + projectKey;
 
         HttpEntity<Void> entity = new HttpEntity<>(createHeaders());
 
@@ -45,9 +45,9 @@ public class SonarClient {
     }
 
     public MetricsClientResponse getMetrics(String projectKey) {
-        String metricKeys = sonarConfiguration.getMetricKeys();
+        String metricKeys = sonarConfiguration.metricKeys();
 
-        String url = sonarConfiguration.getUrl() + "/api/measures/component?component=" + projectKey + "&metricKeys=" + metricKeys;
+        String url = sonarConfiguration.url() + "/api/measures/component?component=" + projectKey + "&metricKeys=" + metricKeys;
 
         HttpEntity<Void> entity = new HttpEntity<>(createHeaders());
 
