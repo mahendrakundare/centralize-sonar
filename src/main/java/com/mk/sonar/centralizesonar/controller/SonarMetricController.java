@@ -5,9 +5,11 @@ import com.mk.sonar.centralizesonar.controller.response.QualityGateApiResponse;
 import com.mk.sonar.centralizesonar.service.SonarMetricsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,7 +28,7 @@ public class SonarMetricController {
 
     @Operation(
             summary = "Get quality gate status",
-            description = "Fetches the current Quality Gate status and related details from Sonar"
+            description = "Fetches the current Quality Gate status and related details from Sonar for the specified project"
     )
     @ApiResponses({
             @ApiResponse(
@@ -40,13 +42,15 @@ public class SonarMetricController {
     })
 
     @GetMapping("/quality-gate")
-    public QualityGateApiResponse fetchQualityGate() {
-        return sonarMetricsService.fetchQualityGate();
+    public QualityGateApiResponse fetchQualityGate(
+            @Parameter(description = "SonarQube project key", required = true)
+            @RequestParam String projectKey) {
+        return sonarMetricsService.fetchQualityGate(projectKey);
     }
 
     @Operation(
             summary = "Get Sonar metrics",
-            description = "Fetches aggregated Sonar metrics for the configured project(s)"
+            description = "Fetches aggregated Sonar metrics for the specified project"
     )
     @ApiResponses({
             @ApiResponse(
@@ -60,8 +64,10 @@ public class SonarMetricController {
     })
 
     @GetMapping("/metrics")
-    public MetricsApiResponse fetchMetrics() {
-        return sonarMetricsService.fetchMetrics();
+    public MetricsApiResponse fetchMetrics(
+            @Parameter(description = "SonarQube project key", required = true)
+            @RequestParam String projectKey) {
+        return sonarMetricsService.fetchMetrics(projectKey);
     }
 
 

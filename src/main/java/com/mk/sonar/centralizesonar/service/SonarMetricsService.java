@@ -15,8 +15,8 @@ public class SonarMetricsService {
         this.sonarClient = sonarClient;
     }
 
-    public QualityGateApiResponse fetchQualityGate() {
-        return mapToQualityGateApiResponse(sonarClient.getQualityGateStatus());
+    public QualityGateApiResponse fetchQualityGate(String projectKey) {
+        return mapToQualityGateApiResponse(sonarClient.getQualityGateStatus(projectKey));
     }
 
     private QualityGateApiResponse mapToQualityGateApiResponse(QualityGateClientResponse qualityGateStatus) {
@@ -31,8 +31,8 @@ public class SonarMetricsService {
     }
 
 
-    public MetricsApiResponse fetchMetrics() {
-        return mapToMetricsApiResponse(sonarClient.getMetrics());
+    public MetricsApiResponse fetchMetrics(String projectKey) {
+        return mapToMetricsApiResponse(sonarClient.getMetrics(projectKey));
     }
 
     private MetricsApiResponse mapToMetricsApiResponse(MetricsClientResponse metrics) {

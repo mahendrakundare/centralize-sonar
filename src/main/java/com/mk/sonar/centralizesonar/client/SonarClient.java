@@ -28,8 +28,7 @@ public class SonarClient {
         return headers;
     }
 
-    public QualityGateClientResponse getQualityGateStatus() {
-        String projectKey = "sonar-demo";
+    public QualityGateClientResponse getQualityGateStatus(String projectKey) {
         String url = sonarConfiguration.getUrl() + "/api/qualitygates/project_status?projectKey=" + projectKey;
 
         HttpEntity<Void> entity = new HttpEntity<>(createHeaders());
@@ -45,8 +44,7 @@ public class SonarClient {
         return qualityGateResponseResponse.getBody();
     }
 
-    public MetricsClientResponse getMetrics() {
-        String projectKey = "sonar-demo";
+    public MetricsClientResponse getMetrics(String projectKey) {
         String metricKeys = "bugs,vulnerabilities,code_smells,coverage,duplicated_lines_density,security_hotspots,security_rating,reliability_rating";
 
         String url = sonarConfiguration.getUrl() + "/api/measures/component?component=" + projectKey + "&metricKeys=" + metricKeys;
