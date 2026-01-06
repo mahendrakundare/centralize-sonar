@@ -118,10 +118,23 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(
+            org.springframework.web.bind.MissingServletRequestParameterException ex, WebRequest request) {
+        logger.warn("Missing request parameter: {}", ex.getMessage());
+        ErrorResponse error = new ErrorResponse(
+                String.format("Missing required parameter: %s", ex.getParameterName()),
+                "MISSING_PARAMETER",
+                400,
+                request.getDescription(false).replace("uri=", "")
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(
             Exception ex, WebRequest request) {
-        logger.error("Unexpected error occurred", ex);
+        logger.error("Unexpected error occurred: {}", ex.getMessage(), ex);
         ErrorResponse error = new ErrorResponse(
                 "An unexpected error occurred. Please try again later.",
                 "INTERNAL_SERVER_ERROR",

@@ -1,0 +1,19 @@
+sonar:
+  url: "http://localhost:9000"
+  token: "test-token"
+  username: "test-user"
+  password: "test-password"
+  metricKeys: "bugs,vulnerabilities"
+
+feign:
+  client:
+    config:
+      sonarClient:
+        connectTimeout: 5000
+        readTimeout: 10000
+        loggerLevel: basic
+  httpclient:
+    enabled: true
+    max-connections: 200
+    max-connections-per-route: 50
+
