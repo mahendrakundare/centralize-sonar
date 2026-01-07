@@ -2,6 +2,7 @@ package com.mk.sonar.centralizesonar.service;
 
 import com.mk.sonar.centralizesonar.client.SonarClient;
 import com.mk.sonar.centralizesonar.client.response.MetricsClientResponse;
+import com.mk.sonar.centralizesonar.client.response.ProjectCatalogClientResponse;
 import com.mk.sonar.centralizesonar.client.response.QualityGateClientResponse;
 import com.mk.sonar.centralizesonar.controller.response.*;
 import com.mk.sonar.centralizesonar.exception.SonarQubeServiceException;
@@ -65,4 +66,25 @@ public class SonarMetricsService {
         );
     }
 
+    public ProjectCatalogApiResponse fetchProjectCatalog() {
+        logger.debug("Fetching project catalog");
+        ProjectCatalogClientResponse response = sonarClient.getProjectCatalog();
+        logger.debug("Successfully fetched project catalog");
+        return mapToProjectCatalogApiResponse(response);
+    }
+
+    private ProjectCatalogApiResponse mapToProjectCatalogApiResponse(ProjectCatalogClientResponse response) {
+        if (response == null || response.components() == null) {
+            logger.error("Invalid project catalog response: null or missing component");
+            throw new SonarQubeServiceException("Invalid response from SonarQube", 500);
+        }
+
+        return new ProjectCatalogApiResponse(
+                response.components()
+                        .stream()
+                        .map(component -> new ProjectComponentResponse(
+                                component.key(),
+                                component.name())).toList()
+        );
+    }
 }

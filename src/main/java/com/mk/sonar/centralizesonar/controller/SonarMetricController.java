@@ -2,6 +2,7 @@ package com.mk.sonar.centralizesonar.controller;
 
 import com.mk.sonar.centralizesonar.controller.response.ErrorResponse;
 import com.mk.sonar.centralizesonar.controller.response.MetricsApiResponse;
+import com.mk.sonar.centralizesonar.controller.response.ProjectCatalogApiResponse;
 import com.mk.sonar.centralizesonar.controller.response.QualityGateApiResponse;
 import com.mk.sonar.centralizesonar.service.SonarMetricsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -124,5 +125,9 @@ public class SonarMetricController {
         return sonarMetricsService.fetchMetrics(projectKey);
     }
 
+    @GetMapping("/projects")
+    ProjectCatalogApiResponse fetchProjectCatalog() {
+        return sonarMetricsService.fetchProjectCatalog();
+    }
 
 }

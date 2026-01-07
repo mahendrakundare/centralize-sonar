@@ -1,6 +1,7 @@
 package com.mk.sonar.centralizesonar.client;
 
 import com.mk.sonar.centralizesonar.client.response.MetricsClientResponse;
+import com.mk.sonar.centralizesonar.client.response.ProjectCatalogClientResponse;
 import com.mk.sonar.centralizesonar.client.response.QualityGateClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,4 +31,8 @@ public class SonarClient {
         return sonarFeignClient.getMetrics(projectKey, metricKeys);
     }
 
+    public ProjectCatalogClientResponse getProjectCatalog() {
+        logger.debug("Calling SonarQube API for project catalog");
+        return sonarFeignClient.getProjectCatalog();
+    }
 }
