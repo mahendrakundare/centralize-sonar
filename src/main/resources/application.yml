@@ -22,3 +22,8 @@ feign:
     enabled: true
     max-connections: 200
     max-connections-per-route: 50
+
+cors:
+  origins:
+    - http://localhost:5173
+    - http://localhost:3000
