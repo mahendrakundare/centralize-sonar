@@ -5,6 +5,14 @@ sonar:
   password: "test-password"
   metricKeys: "bugs,vulnerabilities"
 
+app:
+  feign:
+    retry:
+      maxAttempts: 3
+      initialInterval: 1000
+      maxInterval: 10000
+      multiplier: 2.0
+
 feign:
   client:
     config:
@@ -12,13 +20,12 @@ feign:
         connectTimeout: 5000
         readTimeout: 10000
         loggerLevel: basic
-        retry:
-          maxAttempts: 3
-          initialInterval: 1000
-          maxInterval: 10000
-          multiplier: 2.0
   httpclient:
     enabled: true
     max-connections: 200
     max-connections-per-route: 50
 
+cors:
+  origins:
+    - http://localhost:5173
+    - http://localhost:3000
