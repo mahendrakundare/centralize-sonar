@@ -2,7 +2,9 @@ package com.mk.sonar.centralizesonar.client;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import feign.Retryer;
 import feign.codec.ErrorDecoder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +15,7 @@ import java.util.Base64;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Configuration
+@EnableConfigurationProperties(FeignRetryConfiguration.class)
 public class SonarFeignConfig {
 
     @Bean
@@ -36,6 +39,11 @@ public class SonarFeignConfig {
     @Bean
     public ErrorDecoder errorDecoder() {
         return new SonarErrorDecoder();
+    }
+
+    @Bean
+    public Retryer retryer(FeignRetryConfiguration retryConfig) {
+        return new SonarFeignRetryer(retryConfig);
     }
 }
 
