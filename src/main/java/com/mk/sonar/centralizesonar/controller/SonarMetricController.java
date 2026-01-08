@@ -125,6 +125,42 @@ public class SonarMetricController {
         return sonarMetricsService.fetchMetrics(projectKey);
     }
 
+    @Operation(
+            summary = "Get List of Projects",
+            description = "Fetches the list of all projects from SonarQube"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Metrics successfully retrieved",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectCatalogApiResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad request - invalid project key",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication failed",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Project not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            )
+    })
     @GetMapping("/projects")
     ProjectCatalogApiResponse fetchProjectCatalog() {
         return sonarMetricsService.fetchProjectCatalog();
