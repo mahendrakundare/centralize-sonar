@@ -7,6 +7,7 @@ import feign.FeignException;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,10 +15,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import static com.mk.sonar.centralizesonar.presentation.filter.CorrelationIdConstants.MDC_KEY;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    private String getCorrelationId() {
+        return MDC.get(MDC_KEY);
+    }
 
     @ExceptionHandler(ProjectNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleProjectNotFound(
@@ -27,7 +34,8 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 "PROJECT_NOT_FOUND",
                 404,
-                request.getDescription(false).replace("uri=", "")
+                request.getDescription(false).replace("uri=", ""),
+                getCorrelationId()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
@@ -40,7 +48,8 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 ex.errorCode(),
                 ex.statusCode(),
-                request.getDescription(false).replace("uri=", "")
+                request.getDescription(false).replace("uri=", ""),
+                getCorrelationId()
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
@@ -53,7 +62,8 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 ex.errorCode(),
                 ex.statusCode(),
-                request.getDescription(false).replace("uri=", "")
+                request.getDescription(false).replace("uri=", ""),
+                getCorrelationId()
         );
         HttpStatus httpStatus = HttpStatus.resolve(ex.statusCode());
         return ResponseEntity.status(httpStatus != null ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR)
@@ -64,10 +74,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleFeignException(
             FeignException ex, WebRequest request) {
         logger.error("Feign client error: {}", ex.getMessage(), ex);
-        
+
         int statusCode = ex.status();
         HttpStatus httpStatus;
-        
+
         if (statusCode < 0 || statusCode >= 600) {
             httpStatus = HttpStatus.SERVICE_UNAVAILABLE;
             statusCode = 503;
@@ -78,12 +88,13 @@ public class GlobalExceptionHandler {
                 statusCode = 500;
             }
         }
-        
+
         ErrorResponse error = new ErrorResponse(
                 "Error communicating with SonarQube service: " + ex.getMessage(),
                 "FEIGN_CLIENT_ERROR",
                 statusCode,
-                request.getDescription(false).replace("uri=", "")
+                request.getDescription(false).replace("uri=", ""),
+                getCorrelationId()
         );
         return ResponseEntity.status(httpStatus).body(error);
     }
@@ -96,7 +107,8 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 "INVALID_ARGUMENT",
                 400,
-                request.getDescription(false).replace("uri=", "")
+                request.getDescription(false).replace("uri=", ""),
+                getCorrelationId()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
@@ -113,7 +125,8 @@ public class GlobalExceptionHandler {
                 message.toString().trim(),
                 "VALIDATION_ERROR",
                 400,
-                request.getDescription(false).replace("uri=", "")
+                request.getDescription(false).replace("uri=", ""),
+                getCorrelationId()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
@@ -130,7 +143,8 @@ public class GlobalExceptionHandler {
                 message.toString().trim(),
                 "VALIDATION_ERROR",
                 400,
-                request.getDescription(false).replace("uri=", "")
+                request.getDescription(false).replace("uri=", ""),
+                getCorrelationId()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
@@ -143,7 +157,8 @@ public class GlobalExceptionHandler {
                 String.format("Missing required parameter: %s", ex.getParameterName()),
                 "MISSING_PARAMETER",
                 400,
-                request.getDescription(false).replace("uri=", "")
+                request.getDescription(false).replace("uri=", ""),
+                getCorrelationId()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
@@ -156,7 +171,8 @@ public class GlobalExceptionHandler {
                 "An unexpected error occurred. Please try again later.",
                 "INTERNAL_SERVER_ERROR",
                 500,
-                request.getDescription(false).replace("uri=", "")
+                request.getDescription(false).replace("uri=", ""),
+                getCorrelationId()
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }

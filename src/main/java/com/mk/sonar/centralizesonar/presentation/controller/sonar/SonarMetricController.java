@@ -2,11 +2,7 @@ package com.mk.sonar.centralizesonar.presentation.controller.sonar;
 
 import com.mk.sonar.centralizesonar.application.sonar.service.MetricsService;
 import com.mk.sonar.centralizesonar.application.sonar.service.QualityGateService;
-import com.mk.sonar.centralizesonar.domain.sonar.model.Condition;
-import com.mk.sonar.centralizesonar.domain.sonar.model.Measure;
-import com.mk.sonar.centralizesonar.domain.sonar.model.Metrics;
-import com.mk.sonar.centralizesonar.domain.sonar.model.QualityGate;
-import com.mk.sonar.centralizesonar.domain.sonar.model.ProjectCatalog;
+import com.mk.sonar.centralizesonar.domain.sonar.model.*;
 import com.mk.sonar.centralizesonar.presentation.dto.sonar.*;
 import com.mk.sonar.centralizesonar.presentation.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;

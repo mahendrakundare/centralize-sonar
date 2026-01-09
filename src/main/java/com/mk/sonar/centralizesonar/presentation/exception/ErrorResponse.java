@@ -4,7 +4,8 @@ public record ErrorResponse(
         String message,
         String errorCode,
         int statusCode,
-        String path
+        String path,
+        String correlationId
 ) {
 }
 

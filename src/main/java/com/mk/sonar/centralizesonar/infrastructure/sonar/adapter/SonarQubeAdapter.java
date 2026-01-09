@@ -1,18 +1,11 @@
 package com.mk.sonar.centralizesonar.infrastructure.sonar.adapter;
 
-import com.mk.sonar.centralizesonar.domain.sonar.model.Metrics;
-import com.mk.sonar.centralizesonar.domain.sonar.model.ProjectCatalog;
-import com.mk.sonar.centralizesonar.domain.sonar.model.ProjectInfo;
-import com.mk.sonar.centralizesonar.domain.sonar.model.ProjectKey;
-import com.mk.sonar.centralizesonar.domain.sonar.model.QualityGate;
+import com.mk.sonar.centralizesonar.domain.sonar.model.*;
 import com.mk.sonar.centralizesonar.domain.sonar.port.SonarQubePort;
 import com.mk.sonar.centralizesonar.infrastructure.sonar.client.feign.SonarFeignClient;
 import com.mk.sonar.centralizesonar.infrastructure.sonar.client.response.Condition;
 import com.mk.sonar.centralizesonar.infrastructure.sonar.client.response.Measure;
-import com.mk.sonar.centralizesonar.infrastructure.sonar.client.response.MetricsClientResponse;
-import com.mk.sonar.centralizesonar.infrastructure.sonar.client.response.ProjectCatalogClientResponse;
-import com.mk.sonar.centralizesonar.infrastructure.sonar.client.response.ProjectComponent;
-import com.mk.sonar.centralizesonar.infrastructure.sonar.client.response.QualityGateClientResponse;
+import com.mk.sonar.centralizesonar.infrastructure.sonar.client.response.*;
 import com.mk.sonar.centralizesonar.infrastructure.sonar.config.SonarConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
