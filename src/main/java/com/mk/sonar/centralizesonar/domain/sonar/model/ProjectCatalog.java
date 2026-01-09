@@ -12,7 +12,7 @@ public class ProjectCatalog {
     }
 
     public List<ProjectInfo> projects() {
-        return Collections.unmodifiableList(projects);
+        return projects;
     }
 
     public int count() {

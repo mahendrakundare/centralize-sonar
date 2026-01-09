@@ -78,11 +78,7 @@ public class SonarFeignRetryer implements Retryer {
             return true;
         }
 
-        if (status == 429) {
-            return true;
-        }
-
-        return false;
+        return status == 429;
     }
 }
 

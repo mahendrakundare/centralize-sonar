@@ -1,5 +1,9 @@
 package com.mk.sonar.centralizesonar.infrastructure.sonar.exception;
 
+/**
+ * Base exception class for all SonarQube-related exceptions.
+ * Provides common structure with status code and error code.
+ */
 public class SonarQubeException extends RuntimeException {
     private final int statusCode;
     private final String errorCode;

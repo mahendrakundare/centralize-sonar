@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mk.sonar.centralizesonar.infrastructure.sonar.exception.ProjectNotFoundException;
 import com.mk.sonar.centralizesonar.infrastructure.sonar.exception.SonarQubeAuthenticationException;
 import com.mk.sonar.centralizesonar.infrastructure.sonar.exception.SonarQubeServiceException;
+import com.mk.sonar.centralizesonar.infrastructure.sonar.exception.SonarQubeTimeoutException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import org.slf4j.Logger;
@@ -25,6 +26,13 @@ public class SonarErrorDecoder implements ErrorDecoder {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * Returns the message if it's not null or empty, otherwise returns the default message.
+     */
+    private String getMessageOrDefault(String message, String defaultMessage) {
+        return (message != null && !message.isEmpty()) ? message : defaultMessage;
+    }
+
     @Override
     public Exception decode(String methodKey, Response response) {
         int status = response.status();
@@ -34,7 +42,7 @@ public class SonarErrorDecoder implements ErrorDecoder {
             case 401, 403 -> {
                 logger.warn("Authentication error ({}): {}", status, message);
                 yield new SonarQubeAuthenticationException(
-                        message != null && !message.isEmpty() ? message : DEFAULT_AUTH_ERROR
+                        getMessageOrDefault(message, DEFAULT_AUTH_ERROR)
                 );
             }
             case 404 -> {
@@ -43,28 +51,35 @@ public class SonarErrorDecoder implements ErrorDecoder {
                 yield projectKey != null
                         ? new ProjectNotFoundException(projectKey)
                         : new SonarQubeServiceException(
-                        message != null && !message.isEmpty() ? message : DEFAULT_NOT_FOUND,
+                        getMessageOrDefault(message, DEFAULT_NOT_FOUND),
                         404
                 );
             }
             case 400 -> {
                 logger.warn("Bad request (400): {}", message);
                 yield new SonarQubeServiceException(
-                        message != null && !message.isEmpty() ? message : DEFAULT_BAD_REQUEST,
+                        getMessageOrDefault(message, DEFAULT_BAD_REQUEST),
                         400
                 );
             }
-            case 500, 502, 503, 504 -> {
+            case 504 -> {
+                logger.error("Gateway timeout (504) from SonarQube: {}", message);
+                yield new SonarQubeTimeoutException(
+                        getMessageOrDefault(message, "Gateway timeout while communicating with SonarQube"),
+                        SonarQubeTimeoutException.TimeoutType.READ_TIMEOUT
+                );
+            }
+            case 500, 502, 503 -> {
                 logger.error("SonarQube service error ({}): {}", status, message);
                 yield new SonarQubeServiceException(
-                        message != null && !message.isEmpty() ? message : DEFAULT_SERVICE_UNAVAILABLE,
+                        getMessageOrDefault(message, DEFAULT_SERVICE_UNAVAILABLE),
                         status
                 );
             }
             default -> {
                 logger.error("Unexpected error ({}): {}", status, message);
                 yield new SonarQubeServiceException(
-                        message != null && !message.isEmpty() ? message : DEFAULT_UNEXPECTED_ERROR,
+                        getMessageOrDefault(message, DEFAULT_UNEXPECTED_ERROR),
                         status
                 );
             }
@@ -90,7 +105,7 @@ public class SonarErrorDecoder implements ErrorDecoder {
         try {
             JsonNode root = objectMapper.readTree(errorMessage);
             JsonNode errors = root.get("errors");
-            if (errors != null && errors.isArray() && errors.size() > 0) {
+            if (errors != null && errors.isArray() && !errors.isEmpty()) {
                 JsonNode firstError = errors.get(0);
                 JsonNode msgNode = firstError.get("msg");
                 if (msgNode != null) {

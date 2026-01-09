@@ -40,16 +40,12 @@ public class RequestCorrelationFilter extends OncePerRequestFilter {
         try {
             String correlationId = extractOrGenerateCorrelationId(request);
 
-            // Store in MDC for logging
             MDC.put(MDC_KEY, correlationId);
 
-            // Add to response header
             response.setHeader(HEADER_NAME, correlationId);
 
-            // Continue filter chain
             filterChain.doFilter(request, response);
         } finally {
-            // Clean up MDC after request completion
             MDC.clear();
         }
     }
