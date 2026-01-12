@@ -8,8 +8,12 @@ sonar:
   url: "${SONAR_URL:http://localhost:9000}"
   token: "${SONAR_TOKEN:}"
   username: "${SONAR_USERNAME:admin}"
-  password: "${SONAR_PASSWORD:adminadmin}"
+  password: "${SONAR_PASSWORD:admin123}"
   metricKeys: "${SONAR_METRIC_KEYS:bugs,vulnerabilities,code_smells,coverage,duplicated_lines_density,security_hotspots,security_rating,reliability_rating}"
+
+jira:
+  url: "${JIRA_URL:http://localhost:3000}"
+  token: "${JIRA_TOKEN:}"
 
 app:
   feign:
